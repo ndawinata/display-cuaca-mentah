@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <!-- <link rel="icon" href="/favicon.ico"> -->
+
+  <title>Prakiraan Cuaca Poso</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css"
+    href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.min.css" />
+  <link rel="stylesheet" type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons-wind.min.css" />
+  <link rel="stylesheet" type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+  <link rel="stylesheet" type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.css" />
+
+  <style type="text/css">
+    body,
+    html {
+      height: 100%;
+      margin: 0;
+      font-family: "Roboto", sans-serif;
+      background: #f0f0f0;
+    }
+
+    p {
+      font-weight: 500;
+      font-size: 20px;
+    }
+
+    .bg {
+      /* The image used */
+      background-image: url("img/morning.jpg");
+
+      /* Full height */
+      height: 100%;
+
+      /* Center and scale the image nicely */
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    .logo-holder {
+      padding: 0px 10px 0px 10px;
+      background: white;
+      position: absolute;
+      border-radius: 0 0 30px 0;
+    }
+
+    .logo-holder img {
+      margin: 5px;
+    }
+
+    h1,
+    h2 {
+      color: white;
+      font-family: "Montserrat", sans-serif;
+      font-weight: 500;
+      letter-spacing: -2px;
+      padding-left: 13px;
+      padding-right: 13px;
+    }
+
+    h3 {
+      margin-top: 0px;
+      color: white;
+      padding-right: 13px;
+    }
+
+    .panel .time {
+      font-weight: bold;
+      font-size: 24px;
+    }
+
+    .panel .date {
+      color: grey;
+      font-size: 14px;
+    }
+
+    .panel .weather-img {
+      margin: 0 auto;
+      width: 100px !important;
+      text-align: center;
+    }
+
+    .panel .temp {
+      margin: -5px 0 5px 0;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .wi {
+      font-size: 22px;
+      margin-right: 3px;
+      position: relative;
+      top: 3px;
+    }
+
+    .wi-direction-down {
+      margin-left: 17px;
+      color: #3bb5ff;
+    }
+
+    .wi-direction-up {
+      color: orange;
+    }
+
+    .wi-raindrop {
+      margin-left: 17px;
+      color: #9cd1ff;
+    }
+
+    .wi-strong-wind {
+      color: #ffce4a;
+    }
+
+    .wi-wind,
+    .wi-refresh {
+      color: #ffce4a;
+    }
+  </style>
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+  <div class="bg" id="app">
+    <div class="logo-holder">
+      <img src="img/bmkg.png" width="60px" />
+      <img src="img/stmkg.png" width="60px" />
+      <img src="img/kkn.png" width="130px" style="margin-left: -17px;" />
+    </div>
+
+    <div class="container" style="padding-top: 100px;">
+      <h1><b>Prakiraan Cuaca BMKG</b></h1>
+      <h2>
+        <b><i class="fa fa-map-marker"></i> Poso, Sulawesi Tengah</b>
+        <span class="pull-right" id="date">20 Agustus 2019</span>
+      </h2>
+      <h3 class="pull-right"><span id="clock"></span> WIB</h3>
+
+      <div class="clearfix"></div>
+
+      <div class="owl-carousel" style="margin-top: 120px;">
+        <div v-for="param in parameter">
+          <div class="panel panel-default">
+            <div class="panel-body text-center">
+              <p class="date">{{ param.tanggal }}</p>
+              <hr />
+              <p class="time">{{ param.waktu }}</p>
+              <img class="weather-img" v-bind:src="param.img" height="90px" />
+              <p class="weather">{{ param.weatherinfo }}</p>
+              <p class="temp">{{ param.temp }}°C</p>
+              <p>
+                <i class="wi wi-direction-up"></i><span class="tmax">{{ param.tmax }}°C</span>
+                <i class="wi wi-direction-down"></i><span class="tmin">{{ param.tmin }}°C</span>
+                <i class="wi wi-raindrop"></i><span class="humid">{{ param.humid }}%</span>
+              </p>
+              <p class="ws">
+                <i class="wi wi-strong-wind"></i>
+                <span>{{ param.ws }}km/jam</span>
+              </p>
+              <p class="wd" v-if=" param.wd === 'VARIABLE' ">
+                <span>{{ param.wd }}</span> <i class="wi wi-refresh"></i>
+              </p>
+              <p class="wd" v-else>
+                <span>{{ param.wd }}</span>
+                <i v-bind:class="'wi wi-wind from-' + param.wdeg + '-deg'"></i>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <p class="h3">Gempa Terkini M 5+</p>
+      <div class="container">
+        <div class="row">
+          <div class="col-6">
+            <img style="width: 20%" src="https://ews.bmkg.go.id/tews/data/20200806224508.mmi.jpg" alt="mmi">
+          </div>
+          <div class="col-6">
+            <div id="tglGempa"></div>
+            <div><img style="width: 2%" src="https://www.bmkg.go.id/asset/img/gempabumi/magnitude.png"
+                alt="magnitudo">Magnitudo <span id="magnitude"></span></div>
+            <div><img style="width: 2%" src="https://www.bmkg.go.id/asset/img/gempabumi/kedalaman.png"
+                alt="kedalaman">Kedalaman <span id="kedalaman"></span></div>
+            <div><img style="width: 2%" src="https://www.bmkg.go.id/asset/img/gempabumi/koordinat.png"
+                alt="koordinat">Lokasi <span id="koordinat"></span></div>
+            <div><img style="width: 2%" src="https://www.bmkg.go.id/asset/img/gempabumi/tsunami.png" alt="potensi"><span
+                id="potensi"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <p class="h3">Gempa Terkini</p>
+      <div id="tglGempa1"></div>
+      <div><img style="width: 2%" src="https://www.bmkg.go.id/asset/img/gempabumi/magnitude.png"
+          alt="magnitudo">Magnitudo <span id="magnitude1"></span></div>
+      <div><img style="width: 2%" src="https://www.bmkg.go.id/asset/img/gempabumi/kedalaman.png"
+          alt="kedalaman">Kedalaman <span id="kedalaman1"></span></div>
+      <div><img style="width: 2%" src="https://www.bmkg.go.id/asset/img/gempabumi/koordinat.png" alt="koordinat">Lokasi
+        <span id="koordinat1"></span></div>
+      <div><img style="width: 2%" src="https://www.bmkg.go.id/asset/img/gempabumi/lokasi.png" alt="lokasi"><span
+          id="pusat1"></span></div>
+      <div><span id="dirasakan1"></span></div>
+    </div>
+    <div class="container">
+      <p class="h3">Potensi Tsunami Terakhir</p>
+      <div id="tglGempa1"></div>
+      <div><img style="width: 2%" src="https://www.bmkg.go.id/asset/img/gempabumi/magnitude.png"
+          alt="magnitudo">Magnitudo <span id="magnitude2"></span></div>
+      <div><img style="width: 2%" src="https://www.bmkg.go.id/asset/img/gempabumi/kedalaman.png"
+          alt="kedalaman">Kedalaman <span id="kedalaman2"></span></div>
+      <div><img style="width: 2%" src="https://www.bmkg.go.id/asset/img/gempabumi/koordinat.png" alt="koordinat">Lokasi
+        <span id="koordinat2"></span></div>
+      <div><img style="width: 2%" src="https://www.bmkg.go.id/asset/img/gempabumi/lokasi.png" alt="lokasi"><span
+          id="pusat2"></span></div>
+      <div><span id="dirasakan1"></span></div>
+    </div>
+  </div>
+
+  <!-- Bootstrap core JavaScript
+      ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src="https://maxcdn.bootstrapcdn.com/js/ie10-viewport-bug-workaround.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/locale/id.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/x2js/1.2.0/xml2json.min.js"
+    integrity="sha512-HX+/SvM7094YZEKOCtG9EyjRYvK8dKlFhdYAnVCGNxMkA59BZNSZTZrqdDlLXp0O6/NjDb1uKnmutUeuzHb3iQ=="
+    crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+  <script type="text/javascript">
+    var upda = 0
+    var x2js = new X2JS();
+
+    const getDataGempa = () =>{
+      axios.get("https://data.bmkg.go.id/autogempa.xml").then((dat) => {
+        // Gempa M 5.0+ Terkini
+        let xmlData = dat.data
+        let jsonData = x2js.xml_str2json(xmlData);
+        let data = jsonData.Infogempa.gempa
+        let tgl = data.Tanggal + ", " + data.Jam
+        let kedalaman = data.Kedalaman
+        let koor = data.Lintang + " - " + data.Bujur
+        let m = data.Magnitude
+        let potensi = data.Potensi
+        $("#tglGempa").html(tgl);
+        $("#magnitude").html(m);
+        $("#kedalaman").html(kedalaman);
+        $("#koordinat").html(koor);
+        $("#potensi").html(potensi);
+      });
+
+      axios.get("https://data.bmkg.go.id/gempadirasakan.xml").then((dat) => {
+        // Gempa Terkini (semua gempa)
+        let xmlData = dat.data
+        let jsonData = x2js.xml_str2json(xmlData);
+        let data = jsonData.Infogempa.Gempa[0]
+        let tgl = data.Tanggal
+        let kedalaman = data.Kedalaman
+        let koor = data.Posisi
+        let pusat = data.Keterangan
+        let dirasakan = data.Dirasakan
+        let m = data.Magnitude
+        $("#tglGempa1").html(tgl);
+        $("#magnitude1").html(m);
+        $("#kedalaman1").html(kedalaman);
+        $("#koordinat1").html(koor);
+        $("#pusat1").html(pusat);
+        $("#dirasakan1").html(dirasakan);
+      });
+
+      axios.get("https://data.bmkg.go.id/lasttsunami.xml").then((dat) => {
+        // Potensi Tsunami Terakhir
+        let xmlData = dat.data
+        let jsonData = x2js.xml_str2json(xmlData);
+        let data = jsonData.Infotsunami.Gempa
+        let tgl = data.Tanggal + ", " + data.Jam
+        let kedalaman = data.Kedalaman
+        let koor = data.Lintang + " - " + data.Bujur
+        let pusat = data.Area
+        let m = data.Magnitude
+        $("#tglGempa2").html(tgl);
+        $("#magnitude2").html(m);
+        $("#kedalaman2").html(kedalaman);
+        $("#koordinat2").html(koor);
+        $("#pusat2").html(pusat);
+      });
+    }
+
+    // initial get data
+    getDataGempa()
+
+    // update data every 60 second
+    setInterval(() => {
+      getDataGempa()
+    }, 60000)
+
+    var area = "Poso";
+
+    var kodeCuaca = {
+      0: "Cerah",
+      100: "Cerah",
+      1: "Cerah Berawan",
+      101: "Cerah Berawan",
+      2: "Cerah Berawan",
+      102: "Cerah Berawan",
+      3: "Berawan",
+      103: "Berawan",
+      4: "Berawan Tebal",
+      104: "Berawan Tebal",
+      5: "Udara Kabur",
+      10: "Asap",
+      45: "Kabut",
+      60: "Hujan Ringan",
+      61: "Hujan Ringan",
+      63: "Hujan Lebat",
+      80: "Hujan Lokal",
+      95: "Hujan Petir",
+      97: "Hujan Petir",
+    };
+
+    var kodeWaktu = {
+      "0000": "Pagi Hari",
+      "0600": "Siang Hari",
+      "1200": "Malam Hari",
+      "1800": "Dini Hari",
+    };
+
+    function displayTime() {
+      var date = moment().format("dddd, Do MMMM YYYY");
+      var time = moment().format("LTS");
+      $("#date").html(date);
+      $("#clock").html(time);
+      setTimeout(displayTime, 1000);
+    }
+
+    var app = new Vue({
+      el: "#app",
+      data: {
+        parameter: [],
+      },
+      mounted: function () {
+        var self = this;
+
+        $.ajax({
+          type: "GET",
+          url: "http://data.bmkg.go.id/datamkg/MEWS/DigitalForecast/DigitalForecast-SulawesiTengah.xml",
+          dataType: "xml",
+          success: function (res) {
+            let data = $(res).find('area[description="' + area + '"]');
+            data
+              .find('parameter[id="t"]')
+              .find("timerange")
+              .each(function () {
+                let datetime = $(this).attr("datetime");
+                let date = datetime.substring(0, 8);
+                let time = datetime.substring(8, 12);
+
+                var ampm = ["1200", "1800"].includes(time) ? "am" : "pm";
+
+                let temp = data
+                  .find('parameter[id="t"]')
+                  .find('timerange[datetime="' + datetime + '"]')
+                  .find('value[unit="C"]')
+                  .text();
+                let tmax = data
+                  .find('parameter[id="tmax"]')
+                  .find('timerange[day="' + date + '"]')
+                  .find('value[unit="C"]')
+                  .text();
+                let tmin = data
+                  .find('parameter[id="tmin"]')
+                  .find('timerange[day="' + date + '"]')
+                  .find('value[unit="C"]')
+                  .text();
+                let humid = data
+                  .find('parameter[id="hu"]')
+                  .find('timerange[datetime="' + datetime + '"]')
+                  .find('value[unit="%"]')
+                  .text();
+                let ws = Math.round(
+                  data
+                  .find('parameter[id="ws"]')
+                  .find('timerange[datetime="' + datetime + '"]')
+                  .find('value[unit="KPH"]')
+                  .text()
+                );
+                let wd = data
+                  .find('parameter[id="wd"]')
+                  .find('timerange[datetime="' + datetime + '"]')
+                  .find('value[unit="CARD"]')
+                  .text();
+                let wdeg = Math.round(
+                  data
+                  .find('parameter[id="wd"]')
+                  .find('timerange[datetime="' + datetime + '"]')
+                  .find('value[unit="deg"]')
+                  .text()
+                );
+                let weather = data
+                  .find('parameter[id="weather"]')
+                  .find('timerange[datetime="' + datetime + '"]')
+                  .find('value[unit="icon"]')
+                  .text();
+                let weatherinfo = kodeCuaca[weather];
+                let img =
+                  "https://www.bmkg.go.id/asset/img/weather_icon/ID/" +
+                  kodeCuaca[weather].toLowerCase() +
+                  "-" +
+                  ampm +
+                  ".png";
+                let waktu = kodeWaktu[time];
+                let tanggal = moment(datetime, "YYYYMMDDHHmm")
+                  .add(6, "hours")
+                  .format("Do MMMM YYYY");
+
+                // console.log(datetime);
+                // console.log(date);
+                console.log(time);
+
+                self.parameter.push({
+                  temp,
+                  tmax,
+                  tmin,
+                  humid,
+                  ws,
+                  wd,
+                  wdeg,
+                  weather,
+                  img,
+                  waktu,
+                  weatherinfo,
+                  tanggal,
+                });
+              });
+
+            Vue.nextTick(
+              function () {
+                $(".owl-carousel").owlCarousel({
+                  items: 4,
+                  loop: true,
+                  margin: 10,
+                  autoplay: true,
+                  autoplayTimeout: 5000,
+                  responsiveClass: true,
+                  responsive: {
+                    0: {
+                      items: 1,
+                    },
+                    600: {
+                      items: 3,
+                    },
+                    1000: {
+                      items: 4,
+                      margin: 20,
+                    },
+                  },
+                });
+              }.bind(self)
+            );
+          },
+        });
+
+        displayTime();
+
+        // update background
+        var hourNow = moment().format("H");
+
+        if (hourNow >= 0 && hourNow < 6) {
+          $(".bg").css("background-image", 'url("img/midnight.jpg")');
+        } else if (hourNow >= 6 && hourNow < 12) {
+          $(".bg").css("background-image", 'url("img/morning.jpg")');
+        } else if (hourNow >= 12 && hourNow < 18) {
+          $(".bg").css("background-image", 'url("img/afternoon.jpg")');
+        } else {
+          $(".bg").css("background-image", 'url("img/night.jpg")');
+        }
+      },
+    });
+  </script>
+</body>
+
+</html>
